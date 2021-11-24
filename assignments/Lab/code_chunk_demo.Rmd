@@ -1,0 +1,68 @@
+---
+title: "code chunk demo"
+author: "Juliana Berube"
+date: "10/20/2021"
+output: html_document
+---
+<!-- #Show code = TRUE hide code=FASLE -->
+<!-- #Show code but run/ dont run eval=TRUE eval=FALSE -->
+<!-- #plot options:  -->
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_penguin_data, echo=TRUE, eval=TRUE}
+require(palmerpenguins)
+head(penguins)
+```
+
+```{r simple pairplot, fig.width=4, fig.asp=1}
+plot(penguins[, 3:5])
+```
+
+```{r simple pairplot2, eval=FASLE}
+plot(penguins[,3:5])
+```
+
+#tabset example {.tabset}
+## Tab 1
+Tab 1 contents
+
+## Tab 2
+Tab 2 contents
+
+##Tab 3
+Tab 3 contents
+
+#Next section
+Non-tabbed material 
+
+<!-- #example 2# -->
+
+
+#tabset example {.tabset .tabset-pills}
+## Tab 1
+Tab 1 contents
+
+## Tab 2
+Tab 2 contents
+
+##Tab 3
+Tab 3 contents
+
+#Next section
+Non-tabbed material 
+
+#Different penguin plots {.tabset .tabset-pills}
+
+The following tabs contain different plot types
+
+##Histogram
+```r{r flippper length histogram}
+```
+
+##Another Hist
+```{r bill length hist, echo=FALSE}
+hist(penguins$bill_length_mm)
+```
+

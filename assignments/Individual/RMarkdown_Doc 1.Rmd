@@ -1,0 +1,28 @@
+---
+title: "R Markdown Documents - Part 1"
+subtitle: "Analysis of Environmental Data"
+author: "Juliana Berube"
+date: "9/8/2021"
+output: 
+  html_document:
+    toc: true
+    toc_float: true 
+---
+
+# Introduction
+
+Hi! My name is **Juliana Berube** and I am a graduate student at the University of Massachusetts Amherst. I am in the *Environmental Conservation* program. 
+
+# Concepts List
+
+1. More with RMarkdown and shiny
+2. Statistical analyses and when/ how to use them
+3. Making advanced and effective plots
+
+# Course List
+
+* Mammalogy
+* Animal Behavior
+* Wildlife Habitat Management
+* Dynamics & Management of Wildlife Populations
+* Environmental Economics

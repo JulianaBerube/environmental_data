@@ -1,0 +1,13 @@
+---
+title: "Data_explor_fun_Sep19"
+author: "Juliana Berube"
+date: "9/17/2021"
+output: html_document
+---
+
+```{echo=FALSE}
+par(mfrow = c(2, 3))
+hist(dat_habitat$elev, xlab="Elevation",main = "Habitat Elevation")
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
