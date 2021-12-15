@@ -1,0 +1,328 @@
+---
+title: "Final Project R Reference"
+author: "Juliana Berube"
+date: "12/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Reference Guide {.tabset .tabset-pills}
+
+
+## Loading Data and Packages
+
+To use load data using "require" and "here"
+
+```{r}
+require(here)
+library (palmerpenguins)
+
+#To load the ginkgo data:
+
+ginkgo = read.csv(here("data", "ginkgo_data_2021.csv"))
+```
+
+
+## Data Structures
+
+### c( )
+The function c( ) combines or concatenates its arguments into a vector (a 1-dimensional data structure consisting of 1 or more elements).
+
+* All of the elements must be of the same type.
+* I can’t combine character and numeric types in the same call to c( )
+
+Here’s two examples using numeric and character data types:
+
+```{r}
+## Create a vector of numbers:
+num_vec  = c(1, 4, 8, 9, 13)
+
+## Create a vector of characters:
+char_vec = c("a", "fish", "data is cool")
+```
+
+I can show the contents of a vector by typing the name of the vector, or using the print() function.
+
+```{r}
+## Typing the name of the vector into the console prints the contents
+num_vec
+
+
+## The print() function accomplishes the same task:
+print(char_vec)
+```
+
+### length( )
+
+"Get or set the length of vectors (including lists) and factors, and of any other R object for which a method has been defined" - R Help
+
+Arguments can either be x (R object) or a value (interger)
+
+```{r}
+length(num_vec)
+```
+
+In a data frame, the length argument is restricted to the number of columns:
+```{r}
+length(ginkgo)
+```
+
+Can also be used inside loops and other functions to find the length or number of repetitions (come back to this)
+
+### Matrix ( )
+
+An array (2 dimensional) of numbers or characters arranged into rows and columns. 
+
+Formula: 
+
+matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
+       dimnames = NULL)
+       
+```{r}
+matrix(1:9, nrow = 3, ncol = 3)
+```
+
+The automatic arrangment is columns, then row. 
+
+You can also turn vectors into matrixes. Here is an example of creating multiple matrixes with different lengths from one vector. 
+
+```{r}
+my_vec<-c(1,2,3)
+mat_1 = matrix(my_vec)
+mat_1[3,1]
+
+vec_2<-c("one", "two", "three")
+vec_3<-c(1.0, 2.0, 3.0)
+
+mat_2=matrix(my_vec, nrow=2, ncol = 3)
+mat_3=matrix(my_vec, nrow=3, ncol = 2)
+mat_4=matrix(my_vec, nrow=5, ncol=5)
+```
+See, mat_4 gets and error because the number of rows and columns is longer than my_vec, which is what each matrix is drawing from to populate. 
+
+You can use length() here too to get the length of a matrix
+
+```{r}
+length(mat_2)
+```
+
+### data.frame ( )
+
+This function will create a data frame. Data frames store data tables and can contain multiple types of data in field (whereas a matrix has all the same type of data). Each column contains one variable, and each row contains one set of values from each column. A data frame can be created like this:
+
+```{r}
+ex_month.data <- data.frame(
+   month = c (1:12), 
+   month_name = c("Jan","Feb","Mar","Apr","May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"),
+   sunny_days = c(20,15,19,10,22,25, 28, 21, 17, 16, 18, 14)) 
+```
+
+### nrow( ), ncol( ), dim( )
+
+You can also find the number of rows and columns in a data frame like this:
+
+```{r}
+nrow(ginkgo)
+ncol(ginkgo)
+dim(ginkgo)
+```
+
+## Subsetting
+
+Lets go through some subsets using our ginkgo data. Some ways to do this is to use $ to subset by column name, [] to subset by name, position, row, or column, and subset()
+
+```{r}
+ginkgo$max_depth
+
+#you can assign this to a seperate data frame by naming it: depth=ginkgo$max_depth
+#[] subsetting chooses by row, column
+#select first row of the ginkgo data:
+ginkgo[1,]
+
+#select the element in row 2, column 3:
+ginkgo[2,3]
+
+#select the 3rd column of the ginkgo data
+ginkgo[,3]
+
+#retrieve all the data for Adelie penguins (in the species column) from the penguins dataset
+subset(penguins, species == "Adelie")
+```
+
+## Numerical Data Exploration
+
+To view our data we can use functions like summary(), mean(), and sd()
+
+```{r}
+#Summary of the entire dataset
+summary(ginkgo)
+
+#Summary of a column
+summary(ginkgo$max_width)
+
+#mean of a column
+mean(ginkgo$max_width)
+
+#sd of a column
+sd(ginkgo$max_width)
+
+```
+
+## Graphical Data Exploration
+
+To represent data my favorite way: graphically. 
+
+### Scatterplots
+Lets begin with a scatterplot...
+
+```{r}
+plot(max_width~max_depth, data = ginkgo,
+     xlim=c(5,145),
+     ylim=c(5, 130),
+     xlab= "Leaf Depth (max)",
+     ylab= "Leaf Width (max)",
+     main= "Ginkgo Leaf: Width and Depth",
+     col= "goldenrod",
+     cex= 0.5,
+     pch=5)
+```
+So pretty! 
+
+### Histogram 
+
+Let's do a histogram of penguin data:
+
+```{r}
+hist(penguins$flipper_length_mm,
+     main="Hist of Penguin Flipper Length",
+     xlab="Flipper Length (mm)",
+     col="azure3",
+     breaks=6)
+```
+
+### Boxplots
+
+Moving onto boxplots:
+
+1. A classic boxplot
+```{r}
+boxplot(ginkgo$petiole_length, 
+        main="Ginkgo Petiole Length")
+
+
+```
+
+2. A conditional boxplot (conditioned on seeds_present) 
+```{r}
+boxplot(max_depth~seeds_present,data=ginkgo,
+        main="Ginkgo Leaf Max Depth by Seeds Present",
+        xlab="Seeds Present",
+        ylab="Max Depth",
+        col=c("darkgoldenrod","darkgoldenrod1"))
+```
+
+### Panels
+
+```{r}
+par(mfrow=c(2,2))
+
+hist(ginkgo$notch_depth,
+     main="Hist of Ginkgo Leaf Notch Depth",
+     xlab="Notch Depth",
+     col="goldenrod",
+     breaks=c(0,15,25,50))
+hist(penguins$body_mass_g,
+     main="Hist of Penguin Body Mass",
+     xlab="Body Mass(g)",
+     col="azure3",
+     breaks=5)
+hist(ginkgo$petiole_length,
+     main="Hist of Ginkgo Leaf Petiole Length",
+     xlab="Notch Depth",
+     col="goldenrod2")
+hist(penguins$bill_depth_mm,
+     main="Hist of Penguin Bill Depth",
+     xlab="Bill Depth (mm)",
+     col="azure4",
+     breaks=8)
+```
+
+
+
+
+## Distribution Functions
+
+These functions calculate the probability of events for different parametric distributions.
+
+For a discrete distribution (binomial), the probability mass of an event is the probability that the event will happen. 
+
+Each functions has a different argument, depending on the specific parameters of the distribution.
+
+### dnorm( ) 
+
+dnorm(x, mean = 0, sd = 1, log = FALSE): the probability density
+
+```{r}
+dnorm(-1, mean = 0, sd = 1, log = FALSE)
+
+#Basic plot of normal curve
+# Generate a vector of x-values
+x = seq(-3, 3, length.out = 1000)
+y = dnorm(x)
+
+plot(x, y, main = "Normal PDF", type = "l")
+abline(h = 0)
+```
+
+### pnorm( )
+
+pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE): the cumulative probability density
+
+```{r}
+pnorm(-1.96, mean = 0, sd = 1, log = FALSE)
+pnorm(20, mean=10.4, sd=2.4)
+
+```
+
+
+### qnorm( )
+
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE): the quantile function
+
+```{r}
+#find the Z-score of the 99th quantile of the standard normal distribution 
+qnorm(.99, mean=0, sd=1)
+```
+
+### dbinom( ) 
+
+```{r}
+#Probabilty of observing four out of 6 with a 2/3 probabilty of observation
+dbinom(4,6, 2/3)
+
+#Probablity of observing 0
+dbinom(0, 6, 2/3)
+```
+
+### pbinom( )
+The p-functions calculate the probability of observing a range of events (cumulative probability)
+
+```{r}
+#Probabilty of observing 4 or fewer out of 6 with a 2/3 probabilty of observation
+pbinom(4, 6, 2/3)
+
+#4 or greater 
+1-pbinom(3, 6, 2/3)
+```
+
+
+### qbinom( )
+```{r}
+#find the 10th quantile of a binomial distribution with 10 trials and prob of success on each trial = 0.4
+qbinom(.10, 10, .4)
+```
+
+That's it for now!
