@@ -1,0 +1,54 @@
+---
+title: "Using Models 2"
+author: "Juliana Berube"
+date: "11/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+require(palmerpenguins)
+```
+
+1.)
+```{r, echo=FALSE, fig.width=10, fig.height=5}
+
+boxplot(body_mass_g ~ sex + species, data = penguins,
+        names = c("Adelie: F","Adelie: M","Chinstrap: F", "Chinstrap: M", "Gentoo: F", "Gentoo: M"),
+        xlab="Species & Sex",
+        ylab="Body Mass (g)",
+        main= "Penguin Body Mass by Sex and Species",
+        col=c("lightyellow1","lightyellow2","lightsteelblue1","lightsteelblue2","snow1", "snow2"))
+```
+
+2.)
+Based on the boxplots, it appears that males of all species may be heavier than females. For all the males, the mean weight is larger than the mean weight for females, and in all species excluding chinstrap, the mean male weight is larger than the maximum female weight. 
+
+3.) 
+I do think that adding sex to the model will improve the fit, because when adding sex you are adding a variable that will likely reduce variability; it stands to reason that sex will influence body weight. However, this is only important if you care about sex and the weights within species, and not just species as a whole.
+
+4.)
+```{r, echo=TRUE}
+fit_both=lm(body_mass_g ~ sex * species, data = penguins)
+```
+
+5.)
+The base case is Adelie female
+
+6.)
+(Intercept) and speciesChinstrap
+
+7.)	
+```{r}
+3368.84 +158.37
+```
+
+8.)
+```{r}
+aggregate(body_mass_g ~ sex, subset(penguins, species == "Adelie"& sex == "female"), FUN= mean)
+```
+
+

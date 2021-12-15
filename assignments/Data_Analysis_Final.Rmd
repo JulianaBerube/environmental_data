@@ -1,0 +1,168 @@
+---
+title: "Data Exploration Final"
+author: "Juliana Berube"
+date: "12/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Worked with Julia Vineyard and Jessica Bonin
+
+## Data: 
+```{r}
+require(here)
+delomys = read.csv(here("data", "delomys.csv"))
+summary(delomys$body_length)
+summary(delomys$body_mass)
+
+shapiro.test(delomys$body_length)
+shapiro.test(delomys$body_mass)
+```
+
+## Plots
+
+```{r figure 1, fig.width=10}
+plot(body_length ~ body_mass, data = delomys,
+     xlab="Body Mass",
+     ylab= "Body Length",
+     main="Body Mass x Body Length")
+```
+```{r figure 2}
+hist(delomys$body_mass,
+     main="Hist of Body Mass",
+     xlab="Body Mass")
+```
+```{r}
+hist(delomys$body_length, 
+     main="Hist of Body Length",
+     xlab="Body Length")
+```
+```{r}
+boxplot(body_mass~binomial, data=delomys,
+        main="Body Mass x Species",
+        xlab= "Species",
+        ylab= "Body Mass")
+```
+
+```{r}
+boxplot(body_mass~sex, data=delomys,
+        main = "Body Mass x Sex",
+        xlab= "Sex",
+        ylab= "Body Mass")
+```
+```{r}
+boxplot(body_mass~sex * binomial, data=delomys,
+        main = "Body Mass x Species + Sex",
+        xlab = "Sex: Species",
+        ylab= "Body Mass")
+```
+
+## Plot Questions: 
+
+1.) The relationship between body mass and length appears to be linear. There is a general increase in body mass as body length increases. 
+
+2.) The histogram of body mass visually appears to be normally distributed and has a fairly even spread, whereas the histogram of body length is skewed to the left. 
+
+3.) Based on the Shapiro test, neither body mass or body length is normally distributed, as both tests resulted in a low p-value. Therefore, we reject the null that the data is normally distributed.
+
+4.) Looking at the boxplots, the Delomys dorsalis species has a heavier averge body mass, and for both species the males have a heavier body mass. Looking at the conditional boxplot, the males of Delomys dorsalis have a greater average body mass than either sex of the Delomys sublineatus species. 
+
+## Model Building
+
+
+```{r}
+fit1= lm(body_length ~ body_mass, data=delomys)
+fit2=lm(body_mass ~ sex, data = delomys)
+anova(fit2)
+fit3= lm(body_mass ~ binomial, data=delomys)
+anova(fit3)
+fit4= lm(body_mass ~ sex + binomial, data=delomys)
+anova(fit4)
+fit5= lm(body_mass ~ sex * binomial, data=delomys)
+anova(fit5)
+```
+
+```{r}
+hist(residuals(fit1))
+shapiro.test(residuals(fit1))
+
+```
+
+```{r}
+hist(residuals(fit2))
+shapiro.test(residuals(fit2))
+
+```
+```{r}
+hist(residuals(fit3))
+shapiro.test(residuals(fit3))
+
+```
+
+```{r}
+hist(residuals(fit4))
+shapiro.test(residuals(fit4))
+
+```
+
+```{r}
+hist(residuals(fit5))
+shapiro.test(residuals(fit5))
+```
+
+5.) Based on the visual interperatations of the histograms, most of the models look normally distributed with the exception of fit1. However, the shapiro test returned a signficant value for each model, indicating that all of the models are not normally distributed. 
+
+6.) All of the models did not violate the assumption of normality equally. Fit2 has the least significant value, indicating that is the closest to a normal distribution.
+
+
+```{r}
+knitr::kable(coef(summary(fit1)))
+knitr::kable(coef(summary(fit2)))
+knitr::kable(coef(summary(fit3)))
+knitr::kable(coef(summary(fit4)))
+knitr::kable(coef(summary(fit5)))
+```
+
+
+```{r}
+knitr::kable(anova(fit1))
+knitr::kable(anova(fit2))
+knitr::kable(anova(fit3))
+knitr::kable(anova(fit4))
+knitr::kable(anova(fit5))
+```
+
+7.) The slope is the intercept + body mass, so 76.12466+0.87550 = 77.00016.
+
+8.) The expected body length of an animal that weighs 100g is 163.6747 (76.12466+(0.87550*100)).
+
+9.) The expected length would be the intercept, which is 76.12466 (76.12466+(0.87550*0)).
+
+10.) Female.
+
+11.) Delomys dorsalis. 
+
+12.) Males.
+
+13.) Delomys dorsalis.
+
+14.) Yes, sex and species both are significant predictors.
+
+15.) No, based on the anova table there is not a significant interaction.
+
+16.) The single predictor and additivative models are significant, while the interactive model is not.
+
+```{r}
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
+AIC(fit4)
+AIC(fit5)
+```
+
+17.) Excluding Fit1, the two models with the lowest AIC are fit4 and fit5.
+
+18.) Fit4 is the best model to interperate body mass. Fit4 has the lowest AIC score, and is also easier to interperate than fit5. To understand fit5, you must also understand how the interactions influence the body mass. Fit4 is overall easier to understand and creates a simpler coefficient table. 
