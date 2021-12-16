@@ -135,7 +135,7 @@ knitr::kable(anova(fit4))
 knitr::kable(anova(fit5))
 ```
 
-7.) The slope is the intercept + body mass, so 76.12466+0.87550 = 77.00016.
+7.) The magnitude is the slope, which is 0.87550.
 
 8.) The expected body length of an animal that weighs 100g is 163.6747 (76.12466+(0.87550*100)).
 
